@@ -32,6 +32,12 @@ const Navbar = () => {
 
           {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-4">
+            <Link
+              to="/search"
+              className="hover:text-blue-200 transition-colors"
+            >
+              Search Properties
+            </Link>
             {currentUser ? (
               <>
                 <Link
@@ -81,8 +87,17 @@ const Navbar = () => {
         {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 pb-2">
+            <div className="flex flex-col space-y-3">
+              <Link
+                to="/search"
+                className="hover:text-blue-200 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Search Properties
+              </Link>
+            </div>
             {currentUser ? (
-              <div className="flex flex-col space-y-3">
+              <div className="flex flex-col space-y-3 mt-3">
                 <div className="py-2 border-b border-blue-500">
                   <span>Welcome, {currentUser.name}</span>
                 </div>
@@ -118,7 +133,7 @@ const Navbar = () => {
                 </button>
               </div>
             ) : (
-              <div className="flex flex-col space-y-3">
+              <div className="flex flex-col space-y-3 mt-3">
                 <Link
                   to="/login"
                   className="hover:text-blue-200 transition-colors"

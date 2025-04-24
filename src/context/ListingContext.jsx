@@ -58,13 +58,13 @@ export const ListingProvider = ({ children }) => {
     }
 
     const listingIndex = listings.findIndex(listing => listing.id === id);
-    
+
     if (listingIndex === -1) {
       throw new Error('Listing not found');
     }
 
     const listing = listings[listingIndex];
-    
+
     if (listing.ownerId !== currentUser.id) {
       throw new Error('You can only update your own listings');
     }
@@ -77,7 +77,7 @@ export const ListingProvider = ({ children }) => {
 
     const updatedListings = [...listings];
     updatedListings[listingIndex] = updatedListing;
-    
+
     setListings(updatedListings);
     return updatedListing;
   };
@@ -89,11 +89,11 @@ export const ListingProvider = ({ children }) => {
     }
 
     const listing = listings.find(listing => listing.id === id);
-    
+
     if (!listing) {
       throw new Error('Listing not found');
     }
-    
+
     if (listing.ownerId !== currentUser.id) {
       throw new Error('You can only delete your own listings');
     }
@@ -122,6 +122,66 @@ export const ListingProvider = ({ children }) => {
     return listings.filter(listing => listing.ownerId === currentUser.id);
   };
 
+  // Search listings with multiple criteria
+  const searchListings = (criteria) => {
+    return listings.filter(listing => {
+      // Search term filter (search in title, description, address)
+      if (criteria.searchTerm && !listing.title.toLowerCase().includes(criteria.searchTerm.toLowerCase()) &&
+          !listing.description.toLowerCase().includes(criteria.searchTerm.toLowerCase()) &&
+          !listing.address.toLowerCase().includes(criteria.searchTerm.toLowerCase())) {
+        return false;
+      }
+
+      // Location filter
+      if (criteria.location && !listing.address.toLowerCase().includes(criteria.location.toLowerCase())) {
+        return false;
+      }
+
+      // Size range filter
+      if (criteria.minSize && listing.squareMeters < criteria.minSize) {
+        return false;
+      }
+      if (criteria.maxSize && listing.squareMeters > criteria.maxSize) {
+        return false;
+      }
+
+      // Property type filter
+      if (criteria.propertyType && listing.propertyType !== criteria.propertyType) {
+        return false;
+      }
+
+      // Price range filter
+      if (criteria.minPrice && listing.price < criteria.minPrice) {
+        return false;
+      }
+      if (criteria.maxPrice && listing.price > criteria.maxPrice) {
+        return false;
+      }
+
+      // Purpose filter (sale/rent)
+      if (criteria.purpose && listing.listingType !== criteria.purpose) {
+        return false;
+      }
+
+      // Floor count filter (for apartments)
+      if (criteria.floors && listing.propertyType === 'apartment' && listing.totalFloors !== criteria.floors) {
+        return false;
+      }
+
+      // Room count filter
+      if (criteria.rooms && listing.rooms !== criteria.rooms) {
+        return false;
+      }
+
+      // Bedroom count filter
+      if (criteria.bedrooms && listing.bedrooms !== criteria.bedrooms) {
+        return false;
+      }
+
+      return true;
+    });
+  };
+
   const value = {
     listings,
     loading,
@@ -132,6 +192,7 @@ export const ListingProvider = ({ children }) => {
     getListingById,
     getListingsByOwnerId,
     getMyListings,
+    searchListings,
   };
 
   return (

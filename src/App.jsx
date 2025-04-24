@@ -8,6 +8,7 @@ import CreateListingPage from './pages/CreateListingPage'
 import EditListingPage from './pages/EditListingPage'
 import ListingDetailPage from './pages/ListingDetailPage'
 import MyListingsPage from './pages/MyListingsPage'
+import SearchPage from './pages/SearchPage'
 import Navbar from './components/Navbar'
 import { AuthProvider } from './context/AuthContext'
 import { ListingProvider } from './context/ListingContext'
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
+                <Route path="/search" element={<SearchPage />} />
                 <Route path="/profile" element={
                   <ProtectedRoute>
                     <ProfilePage />

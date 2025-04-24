@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ListingSection from '../components/ListingSection';
 import { useAuth } from '../context/AuthContext';
 import { useListings } from '../context/ListingContext';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { getAllListings } = useListings();
 
@@ -39,6 +40,47 @@ const LandingPage = () => {
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">HennoHome Real Estate</h1>
         <p className="text-gray-600">Find your dream property in Estonia</p>
+
+        {/* Quick Search Box */}
+        <div className="mt-6 bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Find Your Perfect Property</h2>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const searchInput = e.target.elements.quickSearch.value;
+              if (searchInput.trim()) {
+                navigate(`/search?q=${encodeURIComponent(searchInput.trim())}`);
+              } else {
+                navigate('/search');
+              }
+            }}
+            className="flex flex-col sm:flex-row gap-2"
+          >
+            <input
+              type="text"
+              name="quickSearch"
+              placeholder="Search by location, property type, keywords..."
+              className="flex-grow px-4 py-3 border border-gray-300 rounded sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded sm:rounded-l-none transition-colors"
+            >
+              Search
+            </button>
+          </form>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Link to="/search?propertyType=apartment" className="text-sm text-blue-600 hover:text-blue-800">Apartments</Link>
+            <span className="text-gray-400">•</span>
+            <Link to="/search?propertyType=house" className="text-sm text-blue-600 hover:text-blue-800">Houses</Link>
+            <span className="text-gray-400">•</span>
+            <Link to="/search?purpose=rent" className="text-sm text-blue-600 hover:text-blue-800">For Rent</Link>
+            <span className="text-gray-400">•</span>
+            <Link to="/search?purpose=sale" className="text-sm text-blue-600 hover:text-blue-800">For Sale</Link>
+            <span className="text-gray-400">•</span>
+            <Link to="/search" className="text-sm text-blue-600 hover:text-blue-800">Advanced Search</Link>
+          </div>
+        </div>
 
         {!currentUser && (
           <div className="mt-6 bg-blue-50 p-6 rounded-lg shadow-sm">
